@@ -168,17 +168,22 @@ def showAnswers(idSession):
         return {"Error": str(e)}
 
 
+
 def editAnswers(idSession, data):
     try:
+
         user = mongo.db.tests.find_one(
             {'_id': ObjectId(idSession)}, {'_id': 0})
         time = user['time']
 
         if time > 0:
             for x in data:
+                questionId = x['QuestionId']
                 question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
-                    '_id': 0, 'questions': {'$elemMatch': {'Id': x['QuestionId']}}})
+                '_id': 0, "questions": {'$elemMatch': {'Id': questionId }}})
+
                 questionType = question['questions'][0]['QuestionType']
+
 
                 if questionType == 1:
                     mongo.db.tests.update_one(
@@ -203,9 +208,7 @@ def editAnswers(idSession, data):
 
                     )
             message = {"Status": 1, "Message": "success", "Data": True}
-
         else:
-
             message = {"Status": 1, "Message": "success", "Data": False}
 
 

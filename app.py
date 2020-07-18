@@ -9,9 +9,9 @@ from datetime import timedelta
 
 #Configuration------------------------------------------------------------------------------------
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/survey"
+
 app.secret_key ="123"
-#app.config["MONGO_URI"] = "mongodb+srv://danielaLopez:testAPI@cluster0.deqyf.mongodb.net/survey"
+app.config["MONGO_URI"] = "mongodb+srv://danielaLopez:testAPI@cluster0.deqyf.mongodb.net/survey"
 mongo = PyMongo(app)
 
 app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(seconds=3600)

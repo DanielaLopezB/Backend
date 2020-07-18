@@ -20,7 +20,7 @@ def openSurvey():
         return response
 
     except Exception as e:
-        return {"Error": str(e)},404
+        return {"Error": str(e)}
 
 
 @app.route('/api/v1/assessment/test/mode/179/undefined', methods=['GET', 'OPTION'])
@@ -139,7 +139,6 @@ def sendAnswer(id_session):
 @app.route('/api/v1/assessment/<id_session>/answerAll', methods=['POST', 'OPTION'])
 def sendAnswers (id_session):
     try:
-        data = {}
 
         data = request.get_json()
 
