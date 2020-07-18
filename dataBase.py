@@ -4,6 +4,7 @@
 
 from app import mongo
 from bson.objectid import ObjectId
+from datetime import datetime
 
 
 def addUser(name, lastName, email, ParentTestId):
@@ -23,7 +24,7 @@ def addUser(name, lastName, email, ParentTestId):
         return str(id)
 
     except Exception as e:
-        return {"Error": str(e)},404
+        return {"Error": str(e)}, 404
 
 
 def lookS(idSession):
@@ -45,9 +46,12 @@ def lookS(idSession):
 
 def startTest(idSession):
     try:
+        startDate = datetime.now()
         myquery = {'_id':  ObjectId(idSession)}
-        addTime = {'$set': {'time': 3.600}}
+        addTime = {'$set': {'time': 3600}}
+        addData = {'$set': {'date': startDate}}
         mongo.db.tests.update_one(myquery, addTime)
+        mongo.db.tests.update_one(myquery, addData)
 
         message = {"Status": 1, "Message": "success", "Data": True}
 
@@ -62,9 +66,17 @@ def lookQuestion(idSession, numQ):
     try:
         user = mongo.db.tests.find_one(
             {'_id': ObjectId(idSession)}, {'_id': 0})
-        question = user['questions'][numQ-1]
+        time = user['time']
 
-        message = {"Status": 1, "Message": "success", "Data": question}
+        if time > 0:
+            question = user['questions'][numQ-1]
+
+            timer(idSession)
+
+            message = {"Status": 1, "Message": "success", "Data": question}
+        
+        else:
+            message = {"Status": 1, "Message": "success", "Data": False}
 
         return (message)
 
@@ -75,34 +87,57 @@ def lookQuestion(idSession, numQ):
 def addAnswer(idSession, QuestionId, OptionId, At, Ct, Ct2):
 
     try:
-        question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
-                                           '_id': 0, "questions": {'$elemMatch': {"Id": QuestionId}}})
-        questionType = question['questions'][0]['QuestionType']
+        user = mongo.db.tests.find_one(
+            {'_id': ObjectId(idSession)}, {'_id': 0})
+        time = user['time']
 
-        if questionType == 1:
+        if time > 0:
+            question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
+                '_id': 0, "questions": {'$elemMatch': {"Id": QuestionId}}})
+
+            questionType = question['questions'][0]['QuestionType']
+
+            if questionType == 1:
+                mongo.db.tests.update_one(
+                    {
+                        '_id': ObjectId(idSession),
+                        'questions.Id': QuestionId
+                    },
+                    {
+                        '$set': {"questions.$.AnswerOptionId": OptionId}
+                    }
+
+                )
+            if questionType == 3:
+                mongo.db.tests.update_one(
+                    {
+                        '_id': ObjectId(idSession),
+                        "questions.Id": QuestionId
+                    },
+                    {
+                        '$set': {"questions.$.AnsweredText": At}
+                    }
+
+                )
+
+            remindSeconds = time - timer(idSession) 
+
             mongo.db.tests.update_one(
                 {
                     '_id': ObjectId(idSession),
                     'questions.Id': QuestionId
                 },
                 {
-                    '$set': {"questions.$.AnswerOptionId": OptionId}
-                }
-
-            )
-        if questionType == 3:
-            mongo.db.tests.update_one(
-                {
-                    '_id': ObjectId(idSession),
-                    "questions.Id": QuestionId
-                },
-                {
-                    '$set': {"questions.$.AnsweredText": At}
+                    '$set': {"questions.$.RemainingSecond":  remindSeconds }
                 }
 
             )
 
-        message = {"Status": 1, "Message": "success", "Data": True}
+            message = {"Status": 1, "Message": "success", "Data": True}
+
+        else:
+
+            message = {"Status": 1, "Message": "success", "Data": False}
 
         return (message)
 
@@ -114,9 +149,18 @@ def showAnswers(idSession):
     try:
         user = mongo.db.tests.find_one(
             {'_id': ObjectId(idSession)}, {'_id': 0})
-        questions = user['questions']
+        time = user['time']
 
-        message = {"Status": 1, "Message": "success", "Data": questions}
+        if time > 0:
+            user = mongo.db.tests.find_one(
+                {'_id': ObjectId(idSession)}, {'_id': 0})
+            questions = user['questions']
+
+            message = {"Status": 1, "Message": "success", "Data": questions}
+
+        else:
+
+            message = {"Status": 1, "Message": "success", "Data": False}
 
         return (message)
 
@@ -126,35 +170,45 @@ def showAnswers(idSession):
 
 def editAnswers(idSession, data):
     try:
-        for x in data:
-            question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
-                '_id': 0, "questions": {'$elemMatch': {"Id": x['QuestionId']}}})
-            questionType = question['questions'][0]['QuestionType']
+        user = mongo.db.tests.find_one(
+            {'_id': ObjectId(idSession)}, {'_id': 0})
+        time = user['time']
 
-            if questionType == 1:
-                mongo.db.tests.update_one(
-                    {
-                        '_id': ObjectId(idSession),
-                        'questions.Id': x['QuestionId']
-                    },
-                    {
-                        '$set': {"questions.$.AnswerOptionId": x['OptionId']}
-                    }
+        if time > 0:
+            for x in data:
+                question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
+                    '_id': 0, "questions": {'$elemMatch': {"Id": x['QuestionId']}}})
+                questionType = question['questions'][0]['QuestionType']
 
-                )
-            if questionType == 3:
-                mongo.db.tests.update_one(
-                    {
-                        '_id': ObjectId(idSession),
-                        "questions.Id": x['QuestionId']
-                    },
-                    {
-                        '$set': {"questions.$.AnsweredText": x['AnsweredText']}
-                    }
+                if questionType == 1:
+                    mongo.db.tests.update_one(
+                        {
+                            '_id': ObjectId(idSession),
+                            'questions.Id': x['QuestionId']
+                        },
+                        {
+                            '$set': {"questions.$.AnswerOptionId": x['OptionId']}
+                        }
 
-                )
+                    )
+                if questionType == 3:
+                    mongo.db.tests.update_one(
+                        {
+                            '_id': ObjectId(idSession),
+                            "questions.Id": x['QuestionId']
+                        },
+                        {
+                            '$set': {"questions.$.AnsweredText": x['AnsweredText']}
+                        }
 
-        message = {"Status": 1, "Message": "success", "Data": True}
+                    )
+            message = {"Status": 1, "Message": "success", "Data": True}
+
+        else:
+
+            message = {"Status": 1, "Message": "success", "Data": False}
+
+
 
         return (message)
 
@@ -177,7 +231,7 @@ def lookResult(idSession):
 
             if x['Id'] != None:
                 questionCount += 1
-                
+
             if x['QuestionType'] == 1:
                 if x['AnswerOptionId'] == None:
                     emptyQuestion += 1
@@ -207,3 +261,23 @@ def addFeedback(idSession, feedback):
 
     except Exception as e:
         return {"Error": str(e)}
+
+
+def timer(idSession):
+
+    user = mongo.db.tests.find_one(
+        {'_id': ObjectId(idSession)}, {'_id': 0})
+    date = user['date']
+    time = user['time']
+
+    currentDate = datetime.now()
+    diference = currentDate-date
+    timeNow = time - diference.seconds
+
+    myquery = {'_id':  ObjectId(idSession)}
+    addTime = {'$set': {'time': timeNow}}
+    addData = {'$set': {'date': currentDate}}
+    mongo.db.tests.update_one(myquery, addTime)
+    mongo.db.tests.update_one(myquery, addData)
+
+    return diference.seconds

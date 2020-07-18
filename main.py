@@ -4,8 +4,9 @@
 
 
 #IMPORTS
+
 from app import app, mongo
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, session
 from bson import json_util
 
 from dataBase import addUser, lookS, startTest, lookQuestion, addAnswer, showAnswers, editAnswers, lookResult,addFeedback
@@ -26,7 +27,7 @@ def OpenSurvey():
 def OpenAssessment():
     try:
         response = jsonify({"Status": 1, "Message": "success", "Data": {
-            "IsInviteOnly": "false", "IsEligible": True}})
+            "IsInviteOnly": False, "IsEligible": True}})
 
         return response
 
@@ -120,6 +121,7 @@ def StartAssessment(id_session):
 @app.route('/api/v1/assessment/<id_session>/answer' , methods=['POST', 'OPTION'])
 def SendAnswer(id_session):
     try:
+        session.permanent = True
         QuestionId = request.json['QuestionId']
         OptionId = request.json['OptionId']
         At = request.json['AnsweredText']
