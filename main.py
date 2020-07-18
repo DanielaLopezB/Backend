@@ -31,9 +31,9 @@ def OpenAssessment():
 @app.route('/api/v1/assessment/create/<ParentTestId>', methods=['POST', 'OPTION'])
 def CreateUser(ParentTestId):
     try:
-        name = request.json['name']
-        lastName = request.json['lastName']
-        email = request.json['email']
+        name = request.json['Name']
+        lastName = request.json['Surname']
+        email = request.json['Email']
 
         idSession = addUser(name, lastName, email, ParentTestId)
 

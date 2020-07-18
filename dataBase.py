@@ -12,8 +12,8 @@ def addUser(name, lastName, email, ParentTestId):
             Q.append(question)
 
         id = mongo.db.tests.insert(
-            {'name': name, 'lastName': lastName,
-                'email': email, 'ParentTestId': ParentTestId, 'questions': Q}
+            {'Name': name, 'Surname': lastName,
+                'Email': email, 'ParentTestId': ParentTestId, 'questions': Q}
         )
 
         return str(id)
@@ -183,7 +183,7 @@ def lookResult(idSession):
                     emptyQuestion += 1
 
         message = {"Status": 1, "Message": "success", "Data": {'Gkey': idSession,
-                                                               'TakerName': user['name'], 'TakerSurname': user['lastName'], 'TakerEmail': user['email'], 'QuestionCount': questionCount, 'EmptyAnswers': emptyQuestion}}
+                                                               'TakerName': user['Name'], 'TakerSurname': user['Surname'], 'TakerEmail': user['Email'], 'QuestionCount': questionCount, 'EmptyAnswers': emptyQuestion}}
 
         return (message)
 
