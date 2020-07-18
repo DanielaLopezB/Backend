@@ -177,7 +177,7 @@ def editAnswers(idSession, data):
         if time > 0:
             for x in data:
                 question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
-                    '_id': 0, 'questions': {'$elemMatch': {"Id": x['QuestionId']}}})
+                    '_id': 0, 'questions': {'$elemMatch': {'Id': x['QuestionId']}}})
                 questionType = question['questions'][0]['QuestionType']
 
                 if questionType == 1:
