@@ -10,4 +10,4 @@ Activate the virtual environment created: On Linux/Unix run source venv/bin/acti
 
 Install dependencies with pip install -r requirements.txt
 
-Run app with python main.py
+Run app with python3 main.py
