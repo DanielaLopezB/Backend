@@ -1,3 +1,7 @@
+# Author : Daniela López Barahona
+# app.py creates de app impOrting flaSk and makes the connection with the DB
+# July 2020
+
 from flask import Flask,request, jsonify
 from flask_pymongo import PyMongo
 

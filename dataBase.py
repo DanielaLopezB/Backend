@@ -1,3 +1,7 @@
+# Author : Daniela López Barahona
+# dataBase.py hs the corresponding request to the data base
+# July 2020
+
 from app import mongo
 from bson.objectid import ObjectId
 
@@ -19,7 +23,7 @@ def addUser(name, lastName, email, ParentTestId):
         return str(id)
 
     except Exception as e:
-        return {"Error": str(e)}
+        return {"Error": str(e)},404
 
 
 def lookS(idSession):
@@ -189,6 +193,7 @@ def lookResult(idSession):
 
     except Exception as e:
         return {"Error": str(e)}
+
 
 def addFeedback(idSession, feedback):
     try:
