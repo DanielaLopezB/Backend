@@ -14,17 +14,17 @@ from dataBase import addUser, lookS, startTest, lookQuestion, addAnswer, showAns
 #METHODS GET
 
 @app.route('/api/v1/survey/test/179/true', methods=['GET', 'OPTION'])
-def OpenSurvey():
+def openSurvey():
     try:
         response = jsonify({'Status': 1, 'Message': 'Success',  'Data': []})
         return response
 
     except Exception as e:
-        return {"Error": str(e)}
+        return {"Error": str(e)},404
 
 
 @app.route('/api/v1/assessment/test/mode/179/undefined', methods=['GET', 'OPTION'])
-def OpenAssessment():
+def openAssessment():
     try:
         response = jsonify({"Status": 1, "Message": "success", "Data": {
             "IsInviteOnly": False, "IsEligible": True}})
@@ -36,7 +36,7 @@ def OpenAssessment():
 
 
 @app.route('/api/v1/assessment/<id_session>/<test>', methods=['GET', 'OPTION'])
-def CallSession(id_session, test):
+def callSession(id_session, test):
     try:
         response = json_util.dumps(lookS(id_session))
 
@@ -92,7 +92,7 @@ def testBySlug():
 #METHODS POST
 
 @app.route('/api/v1/assessment/create/<ParentTestId>', methods=['POST', 'OPTION'])
-def CreateUser(ParentTestId):
+def createUser(ParentTestId):
     try:
         name = request.json['Name']
         lastName = request.json['Surname']
@@ -110,7 +110,7 @@ def CreateUser(ParentTestId):
 
 
 @app.route('/api/v1/assessment/<id_session>/start', methods=['POST', 'OPTION'])
-def StartAssessment(id_session):
+def startAssessment(id_session):
     try:
         response = json_util.dumps(startTest(id_session))
         return Response(response, mimetype="application/json")
@@ -119,7 +119,7 @@ def StartAssessment(id_session):
 
 
 @app.route('/api/v1/assessment/<id_session>/answer' , methods=['POST', 'OPTION'])
-def SendAnswer(id_session):
+def sendAnswer(id_session):
     try:
         session.permanent = True
         QuestionId = request.json['QuestionId']
@@ -137,11 +137,11 @@ def SendAnswer(id_session):
 
 
 @app.route('/api/v1/assessment/<id_session>/answerAll', methods=['POST', 'OPTION'])
-def SendAnswers (id_session):
+def sendAnswers (id_session):
     try:
         data = {}
 
-        data = request.get_json('questions')
+        data = request.get_json()
 
         response = json_util.dumps(editAnswers(id_session,data))
  

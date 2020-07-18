@@ -24,7 +24,7 @@ def addUser(name, lastName, email, ParentTestId):
         return str(id)
 
     except Exception as e:
-        return {"Error": str(e)}, 404
+        return {"Error": str(e)}
 
 
 def lookS(idSession):
@@ -177,7 +177,7 @@ def editAnswers(idSession, data):
         if time > 0:
             for x in data:
                 question = mongo.db.tests.find_one({'_id': ObjectId(idSession)}, {
-                    '_id': 0, "questions": {'$elemMatch': {"Id": x['QuestionId']}}})
+                    '_id': 0, 'questions': {'$elemMatch': {"Id": x['QuestionId']}}})
                 questionType = question['questions'][0]['QuestionType']
 
                 if questionType == 1:
@@ -187,7 +187,7 @@ def editAnswers(idSession, data):
                             'questions.Id': x['QuestionId']
                         },
                         {
-                            '$set': {"questions.$.AnswerOptionId": x['OptionId']}
+                            '$set': {'questions.$.AnswerOptionId': x['OptionId']}
                         }
 
                     )
@@ -198,7 +198,7 @@ def editAnswers(idSession, data):
                             "questions.Id": x['QuestionId']
                         },
                         {
-                            '$set': {"questions.$.AnsweredText": x['AnsweredText']}
+                            '$set': {'questions.$.AnsweredText': x['AnsweredText']}
                         }
 
                     )
