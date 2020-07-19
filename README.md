@@ -18,5 +18,5 @@
   
    Select the method that you want to test
    
-   Run your selection with python nametest.py
+   Run your selection with python name.test.py
 
