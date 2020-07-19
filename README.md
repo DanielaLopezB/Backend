@@ -10,7 +10,7 @@
 
     Install dependencies with pip install -r requirements.txt
 
-    Run app with python app.py
+    Run app with python main.py
 
 - Instruction for run the test
     
