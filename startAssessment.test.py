@@ -6,7 +6,7 @@ import unittest
 import json
 import sys
 
-from main import app, mongo
+from main import app
 
 
 class BasicTestCase(unittest.TestCase):
