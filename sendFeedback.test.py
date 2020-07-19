@@ -1,5 +1,5 @@
 # Author : Daniela López Barahona
-# sendAnswers.test.py does the test of the method POST sendAnswers()
+# sendFeedback.test.py does the test of the method POST sendFeedback()
 #July 2020
 
 import unittest
@@ -9,7 +9,7 @@ import sys
 from main import app
 
 class BasicTestCase(unittest.TestCase):
-    def test_sendAnswers(self):
+    def test_sendFeedback(self):
 
         print("\n Enter the idSession")
         idSession = input()
@@ -17,7 +17,7 @@ class BasicTestCase(unittest.TestCase):
         print("\n Enter the Body request")
         body = input()
 
-        url = '/api/v1/assessment/' + idSession + '/answerAll'
+        url = '/api/v1/assessment/' + idSession + '/feedback'
 
         tester = app.test_client(self)
         response = tester.post(

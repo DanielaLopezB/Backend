@@ -9,7 +9,7 @@ import sys
 from main import app
 
 class BasicTestCase(unittest.TestCase):
-    def test_createUser(self):
+    def test_sendAnswer(self):
 
         print("\n Enter the idSession")
         idSession = input()

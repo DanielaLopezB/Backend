@@ -10,7 +10,7 @@ from main import app, mongo
 
 
 class BasicTestCase(unittest.TestCase):
-    def test_startAssessment(self):
+    def test_endSurvey(self):
 
         print("\n Enter the idSession")
         idSession = input()
