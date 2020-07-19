@@ -1,5 +1,5 @@
 # Author : Daniela López Barahona
-# sendAnswer.test.py does the test of the method POST sendAnswer()
+# sendAnswers.test.py does the test of the method POST sendAnswers()
 #July 2020
 
 import unittest
@@ -17,7 +17,7 @@ class BasicTestCase(unittest.TestCase):
         print("\n Enter the Body request")
         body = input()
 
-        url = '/api/v1/assessment/' + idSession + '/answer'
+        url = '/api/v1/assessment/' + idSession + '/answerAll'
 
         tester = app.test_client(self)
         response = tester.post(
