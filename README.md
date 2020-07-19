@@ -13,6 +13,8 @@
     Run app with python app.py
 
 - Instruction for run the test
+    
+   In the same enviroment 
   
    Select the method that you want to test
    
