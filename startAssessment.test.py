@@ -5,7 +5,6 @@
 import unittest
 import json
 import sys
-from bson.objectid import ObjectId
 
 from main import app, mongo
 
